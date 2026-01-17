@@ -1,0 +1,87 @@
+
+body {
+  margin: 0;
+  padding: 0;
+  font-family: Arial, sans-serif;
+  background: #242424;
+  color: #eaeaea;
+}
+
+button {
+   background-color: rgb(220, 124, 22);
+  color: #fff;
+ border: none;
+  padding: 6px 12px;
+  cursor: pointer;
+}
+
+button.active {
+  background: #555;
+}
+
+
+
+input, textarea {
+  background: #1e1e1e;
+  color: #fff;
+  border: 1px solid #444;
+  padding: 6px;
+  margin: 4px 0;
+  width: 100%;
+}
+
+.admin-layout {
+  padding: 20px;
+}
+
+.admin-columns {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 20px;
+  margin-top: 10px;
+}
+
+.admin-left,
+.admin-right {
+  background: #1c1c1c;
+  padding: 15px;
+  
+}
+
+.admin-left > div {
+  margin-bottom: 20px;
+}
+
+.page-container {
+  display: grid;
+  place-content: center; 
+  justify-items: center;
+  min-height: 100vh;      
+  text-align: center;    
+  gap: 20px;             
+}
+
+.page-container button {
+  width: 200px; 
+  padding: 10px; 
+  font-size: 18px;
+}
+
+.card{
+  background-color: #555;
+  padding: 8px;
+  margin-bottom: 10px;
+}
+
+
+.delete-btn{
+
+  background:rgb(192, 48, 48);
+  margin-top: 8px;
+
+}
+
+.edit-btn{
+  background: rgb(42, 129, 42);
+  margin-top: 8px;
+}
