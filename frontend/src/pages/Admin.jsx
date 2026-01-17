@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import AddEmployee from "../components.jsx/AddEmployee";
 import AssignReview from "../components.jsx/AssignReview";
 import CreateReview from "../components.jsx/CreateReview";
@@ -8,6 +8,21 @@ import ReviewList from "../components.jsx/ReviewList";
 
 function Admin() {
   const [activeTab, setActiveTab] = useState("employees");
+  const [employees, setEmployees] = useState([]);
+  // Fetched emplyeess
+  const fetchEmployees = async () => {
+    try {
+      const response = await fetch("http://localhost:8000/api/employees");
+      const result = await response.json();
+      setEmployees(result.data || []);
+    } catch (error) {
+      console.log("Error fetching employees", error.message);
+    }
+  };
+
+  useEffect(() => {
+    fetchEmployees();
+  }, []);
 
   return (
     <div className="admin-layout">
@@ -15,7 +30,7 @@ function Admin() {
 
       <div className="admin-columns">
         <div className="admin-left">
-          <AddEmployee />
+          <AddEmployee fetchEmployees={fetchEmployees}/>
           <CreateReview />
           <AssignReview />
         </div>
@@ -45,7 +60,9 @@ function Admin() {
           </div>
 
           <div className="tab-content">
-            {activeTab === "employees" && <EmployeeList />}
+            {activeTab === "employees" && <EmployeeList 
+                employees={employees} 
+                fetchEmployees={fetchEmployees} />}
             {activeTab === "reviews" && <ReviewList />}
             {activeTab === "feedbacks" && <FeedbackList />}
           </div>

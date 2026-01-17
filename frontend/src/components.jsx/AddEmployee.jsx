@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 
- function AddEmployee() {
+ function AddEmployee({ fetchEmployees }) {
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
 
@@ -24,6 +24,7 @@ import React, { useState } from "react";
         setName("");
         setEmail("");
         alert("New Employee added")
+        fetchEmployees();
       } else {
         console.error("Failed to add employee");
       }

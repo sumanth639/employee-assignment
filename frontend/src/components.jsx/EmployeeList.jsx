@@ -1,74 +1,46 @@
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 
-function EmployeeList() {
-  const [employees, setEmployees] = useState([]);
+function EmployeeList({ employees, fetchEmployees }) {
   const [editId, setEditId] = useState("");
   const [edit, setEdit] = useState(false);
   const [newName, setNewName] = useState("");
   const [newEmail, setNewEmail] = useState("");
-
-  useEffect(() => {
-    const fetchEmployees = async () => {
-      try {
-        const response = await fetch("http://localhost:8000/api/employees");
-        const result = await response.json();
-        setEmployees(result.data || []);
-      } catch (error) {
-        console.log("Error fetching employees", error.message);
-      }
-    };
-
-    fetchEmployees();
-  }, []);
- 
+  
   // Handles delete of emplyee
   const handleDelete = async (id) => {
     if (!id) return;
-
     try {
-      const response = await fetch(
-        `http://localhost:8000/api/employees/${id}`,
-        {
-          method: "DELETE",
-        }
-      );
-
+      const response = await fetch(`http://localhost:8000/api/employees/${id}`, {
+        method: "DELETE",
+      });
       if (response.ok) {
-        setEmployees((prev) => prev.filter((emp) => emp.id !== id));
+        fetchEmployees();
       }
     } catch (error) {
-      console.error("Error deleting employee", error.message);
+      console.error("Error deleting employees", error.message);
     }
   };
-  //  Saves the updated for the backend 
+  // Handles updating of employee
   const handleUpdate = async () => {
     if (!editId || !newName || !newEmail) return;
-
     try {
       const res = await fetch(`http://localhost:8000/api/employees/${editId}`, {
         method: "PUT",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ name: newName, email: newEmail }),
       });
-
       if (res.ok) {
-        const updated = await res.json();
-        setEmployees((prev) =>
-          prev.map((emp) => (emp.id === editId ? updated.data : emp))
-        );
         setEditId("");
         setNewName("");
         setNewEmail("");
         setEdit(false);
-      } else {
-        console.error("Update failed");
+        fetchEmployees();
       }
     } catch (err) {
       console.error("Update failed");
     }
   };
-  
-  // USed to update the emplyee and automatically sets the employee name email
+
   const startEdit = (employee) => {
     setEdit(true);
     setEditId(employee.id);
@@ -81,13 +53,8 @@ function EmployeeList() {
       <h3>All Employee List</h3>
 
       {edit && (
-        <div>
+        <div >
           <h4>Update Employee</h4>
-          <input
-            placeholder="Employee ID"
-            value={editId}
-            onChange={(e) => setEditId(e.target.value)}
-          />
           <input
             placeholder="New Name"
             value={newName}
@@ -98,23 +65,26 @@ function EmployeeList() {
             value={newEmail}
             onChange={(e) => setNewEmail(e.target.value)}
           />
-          <button onClick={handleUpdate}>Update</button>
-          <button onClick={() => setEdit(false)} >Cancel</button>
+          <div >
+            <button onClick={handleUpdate}>Save Changes</button>
+            <button onClick={() => setEdit(false)} >Cancel</button>
+          </div>
         </div>
       )}
 
-      {employees.length > 0 ? (
+      {employees && employees.length > 0 ? (
         <ol>
           {employees.map((employee) => (
-            <li key={employee.id} className="card">
-              <span>Name: {employee.name} </span>
-              <span>Email: {employee.email} </span>
-              <span>Employee ID: {employee.id}</span>
-
+            <li key={employee.id} className="card" >
               <div>
+                <strong>Name:</strong> {employee.name} <br />
+                <strong>Email:</strong> {employee.email} <br />
+                <strong>ID:</strong> {employee.id}
+              </div>
+              <div >
                 <button
                   className="delete-btn"
-                  onClick={() => handleDelete(employee.id)}
+                  onClick={() => handleDelete(employee.id)}  
                 >
                   Delete
                 </button>
